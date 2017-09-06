@@ -9,7 +9,7 @@ router
     const expense = new Expense(req.body);
   })
   .get('/expense', async (req, res, next) => {})
-  .update('/expense/:id', async (req, res, next) => {})
+  .patch('/expense/:id', async (req, res, next) => {})
   .delete('/expense/:id', async (req, res, next) => {})
   .use(jsonParser);
 
