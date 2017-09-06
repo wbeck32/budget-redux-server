@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = Promise;
 
 
-module.exports = function (dbUri=process.env.MONGODB_URI || 'mongodb://localhost:27017/image-gallery-dev') {
+module.exports = function (dbUri=process.env.MONGODB_URI || 'mongodb://localhost:27017/budget-redux-dev') {
     const promise = mongoose.connect(dbUri).then(() => mongoose.connection);
 
     mongoose.connection.on('connected', function () {
