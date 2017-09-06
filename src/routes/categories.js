@@ -10,6 +10,9 @@ router
   if (find.length == 0) return res.send(await category.save(category));
     return res.send(null)
 })
+.update('/category/:id', async (req, res, next) => {
+
+  })
 .get('/category', async (req, res, next) => {
 
 })
