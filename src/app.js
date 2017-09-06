@@ -9,8 +9,8 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(express.static('../public'));
 
-// const images = require('./routes/images');
+const categories = require('./routes/categories');
 
-// app.use('/api', images);
+app.use('/api', categories);
 
 module.exports = app;

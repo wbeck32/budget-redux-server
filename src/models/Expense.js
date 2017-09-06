@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 const expenseSchema = new Schema({
   timestamp: { type: Date, required: true, default: Date.now },
-  category: { type: Schema.Types.ObjectId, required: true },
+  category: { type: mongoose.Schema.ObjectId, required: true },
   catName: { type: String, required: true },
-  subCategory: { type: Schema.Types.ObjectId, required: true },
+  subCategory: { type: mongoose.Schema.ObjectId, required: true },
   subCatName: { type: String, required: true },
   amount: { type: Number, required: true }
 });

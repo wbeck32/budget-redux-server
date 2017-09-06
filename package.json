@@ -1,0 +1,36 @@
+{
+  "name": "budget-redux-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test:watch:nodemon": "nodemon --watch lib --watch tests --exec 'npm test'",
+    "test:watch": "npm test -- -w",
+    "test": "mocha --recursive './src/tests' --reporter mocha-better-spec-reporter",
+    "start": "npm run test:watch:nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wbeck32/budget-redux-server.git"
+  },
+  "author": "Wendy Beck",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wbeck32/budget-redux-server/issues"
+  },
+  "homepage": "https://github.com/wbeck32/budget-redux-server#readme",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "dotenv": "^4.0.0",
+    "mocha": "^3.5.0",
+    "mocha-better-spec-reporter": "^3.1.0",
+    "morgan": "^1.8.2",
+    "nodemon": "^1.12.0"
+  },
+  "dependencies": {
+    "express": "^4.15.4",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.11.10"
+  }
+}
