@@ -41,5 +41,8 @@ describe('e2e budget tests', () => {
     assert.equal(postNewCat.body.name, 'home');
     const postNewCatAgain = await req.post('/api/category').send(homeCat);
     assert.deepEqual(postNewCatAgain.body, {})
-  });
+  }),
+  it('POST a new subcategory to an exisiting category', async () => {
+
+  })
 });

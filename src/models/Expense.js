@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const expenseSchema = new Schema({
   timestamp: { type: Date, required: true, default: Date.now },
-  category: { type: mongoose.Schema.ObjectId, required: true },
+  category: { type: mongoose.Schema.ObjectId, required: true, ref: 'Category' },
   catName: { type: String, required: true },
   subCategory: { type: mongoose.Schema.ObjectId, required: true },
   subCatName: { type: String, required: true },

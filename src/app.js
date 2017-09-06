@@ -10,7 +10,9 @@ app.use(bodyParser.json());
 app.use(express.static('../public'));
 
 const categories = require('./routes/categories');
+const expenses = require('./routes/expenses');
 
 app.use('/api', categories);
+app.use('/api', expenses);
 
 module.exports = app;
