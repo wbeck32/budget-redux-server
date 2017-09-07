@@ -3,6 +3,8 @@ const router = express.Router();
 const jsonParser = require('body-parser').json();
 const Category = require('../models/Category');
 
+const ObjectId = require('mongoose').Types.ObjectId;
+
 router
   .post('/category', async (req, res, next) => {
     const category = new Category(req.body);
@@ -34,16 +36,26 @@ router
     jsonParser,
     async (req, res, next) => {
       const { body } = req;
-      console.log('body: ', body)
+      const { cid, sid } = req.params;
       const update = {};
 
-      if(body.subName) { update[subCategories.subName] = body.subName };
-      if(body.subAmount) { update[subCategories.$.subCatAmount] = body.subAmount };
-      console.log('update: ', update)
-      const updatedSubcat = await Category.update({ _id:cid }, {$set:{sid :update}}, {new: true, runValidators: true});
+      if (body.subName) {
+        update['subCategories.$.subName'] = body.subName;
+      }
+      if (body.subAmount) {
+        update['subCategories.$.subCatAmount'] = body.subAmount;
+      }
+
+      const updatedSubcat = await Category.update(
+        { 'subCategories._id': ObjectId(sid) },
+        { $set: update }
+      );
+      return res.send(updatedSubcat);
     }
   )
-  .delete('/category/:id', async (req, res, next) => {})
+  .delete('/category/:id', async (req, res, next) => {
+    const {id} = req.params;
+  })
   .use(jsonParser);
 
 module.exports = router;

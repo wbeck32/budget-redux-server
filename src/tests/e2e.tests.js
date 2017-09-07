@@ -32,7 +32,7 @@ describe('e2e budget tests', () => {
 
     const testSubcategory = {
       subName: 'internet',
-      subCatAmount: 85
+      subCatAmount: 850
     };
 
     const testSubcategory2 = {
@@ -69,18 +69,22 @@ describe('e2e budget tests', () => {
         assert.equal(savedSubcategory.body.n, 1);
         assert.equal(savedSubcategory.body.nModified, 1);
       }),
-      it.skip('UPDATE existing subcategory with a new budget amount', async () => {
+      it('UPDATE existing subcategory with a new budget amount', async () => {
         const allCategories = await req.get('/api/category');
-        console.log('bbb: ', allCategories.body);
         const cid = allCategories.body[0]._id;
         const sid = allCategories.body[0].subCategories[0]._id;
         const updatedSubcategory = await req
           .patch(`/api/category/${cid}/subcategory/${sid}`)
           .send(testSubcategory2);
-        // console.log('udsc: ', updatedSubcategory.body)
-        // assert.lengthOf(updatedSubcategory.body.subCategories, 2);
+          assert.equal(updatedSubcategory.body.n, 1);
+          assert.equal(updatedSubcategory.body.nModified, 1);
       }),
-      it('DELETE existing category and its expenses', async () => {});
+      it.skip('DELETE existing category and its expenses', async () => {
+        const allCategories = await req.get('/api/category');
+        const cid = allCategories.body[0]._id;
+        const deleteSubcategory = await req.del(`/api/category/${cid}`)
+        console.log('deleted: ', deleteSubcategory)
+      });
   });
 
   describe('e2e expenses tests', () => {
