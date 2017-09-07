@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const subCategorySchema = new Schema({
   subName: { type: String, required: true },
   subCatAmount: { type: Number, required: true },
-  subCatRemaining: { type: Number, required: true }
+  subCatRemaining: { type: Number, required: false }
 });
 
 const categorySchema = new Schema({

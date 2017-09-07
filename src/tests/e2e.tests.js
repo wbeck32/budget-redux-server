@@ -62,19 +62,18 @@ describe('e2e budget tests', () => {
       }),
       it('POST a new subcategory to an existing category', async () => {
         const allCategories = await req.get('/api/category');
-        console.log('ddd: ', allCategories.body);
         const cid = allCategories.body[0]._id;
         const savedSubcategory = await req
           .patch(`/api/category/${cid}`)
           .send(testSubcategory);
-        assert.lengthOf(savedSubcategory.body.subCategories, 3);
-        assert.equal(savedSubcategory.body._id, allCategories.body[0]._id);
+        assert.equal(savedSubcategory.body.n, 1);
+        assert.equal(savedSubcategory.body.nModified, 1);
       }),
-      it('UPDATE existing subcategory with a new budget amount', async () => {
-        const allCategories = await req.patch('/api/category');
+      it.skip('UPDATE existing subcategory with a new budget amount', async () => {
+        const allCategories = await req.get('/api/category');
         console.log('bbb: ', allCategories.body);
         const cid = allCategories.body[0]._id;
-        const sid = allCategories.body[0]._id.subCategories[0]._id;
+        const sid = allCategories.body[0].subCategories[0]._id;
         const updatedSubcategory = await req
           .patch(`/api/category/${cid}/subcategory/${sid}`)
           .send(testSubcategory2);

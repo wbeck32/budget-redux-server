@@ -15,25 +15,34 @@ router
     return res.send(allCats);
   })
   .get('/category/:cid', async (req, res, next) => {
-    console.log('get cat by id: ',req.params);
-    const {cid} = req.params
+    const { cid } = req.params;
     const catById = await Category.findById({ _id: cid });
     res.send(catById);
   })
   .patch('/category/:cid', jsonParser, async (req, res, next) => {
-    console.log('HELLO PATCH CATEGORY!: ', req.body)
-
+    const newSubcategory = req.body;
+    const { cid } = req.params;
+    const newSubcat = await Category.update(
+      { _id: cid },
+      { $addToSet: { subCategories: newSubcategory } },
+      { new: true, runValidators: true }
+    );
+    return res.send(newSubcat);
   })
-  .patch('/category/:cid/subcategory/:sid', jsonParser, async (req, res, next) => {
-    // const { query, update } = req.body;
-    console.log('HELLO PATCH!: ', req.body)
-    // const update = {};
-    // if(body.subName) { update[subCategories.$.subCatName] : body.subName };
-    // if(body.subAmount) { update[subCategories.$.subCatAmount]: body.subAmount };
+  .patch(
+    '/category/:cid/subcategory/:sid',
+    jsonParser,
+    async (req, res, next) => {
+      const { body } = req;
+      console.log('body: ', body)
+      const update = {};
 
-    // const newSubcat = await Category.update({_id:cid, subCategory._id:sid }, {$set:{update}}, {new: true, runValidators: true});
-
-  })
+      if(body.subName) { update[subCategories.subName] = body.subName };
+      if(body.subAmount) { update[subCategories.$.subCatAmount] = body.subAmount };
+      console.log('update: ', update)
+      const updatedSubcat = await Category.update({ _id:cid }, {$set:{sid :update}}, {new: true, runValidators: true});
+    }
+  )
   .delete('/category/:id', async (req, res, next) => {})
   .use(jsonParser);
 
