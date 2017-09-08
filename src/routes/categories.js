@@ -55,6 +55,8 @@ router
   )
   .delete('/category/:id', async (req, res, next) => {
     const {id} = req.params;
+    const deleted = await Category.deleteOne({_id: id});
+    return res.send(deleted)
   })
   .use(jsonParser);
 

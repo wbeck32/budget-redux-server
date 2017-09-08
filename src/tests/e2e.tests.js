@@ -79,11 +79,12 @@ describe('e2e budget tests', () => {
           assert.equal(updatedSubcategory.body.n, 1);
           assert.equal(updatedSubcategory.body.nModified, 1);
       }),
-      it.skip('DELETE existing category and its expenses', async () => {
+      it('DELETE existing category and its expenses', async () => {
         const allCategories = await req.get('/api/category');
         const cid = allCategories.body[0]._id;
         const deleteSubcategory = await req.del(`/api/category/${cid}`)
-        console.log('deleted: ', deleteSubcategory)
+        assert.equal(deleteSubcategory.body.n, 1);
+        assert.equal(deleteSubcategory.body.ok, 1);
       });
   });
 
