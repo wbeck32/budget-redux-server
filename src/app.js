@@ -11,9 +11,10 @@ app.use(bodyParser.json());
 app.use(express.static('../public'));
 
 const me = require('./routes/me');
-// const categories = require('./routes/categories');
+const auth = require('./routes/auth');
 const expenses = require('./routes/expenses');
 
+app.use('/api/auth', auth);
 app.use('/api/me', ensureAuth, me);
 app.use('/api', expenses);
 

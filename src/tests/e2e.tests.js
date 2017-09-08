@@ -10,7 +10,20 @@ describe('e2e budget tests', () => {
     await connection.dropDatabase();
   });
 
-  describe.skip('e2e category tests', () => {
+  describe.only('e2e user tests', () => {
+    const testUser = {
+      name: 'token joe',
+      password: 'abcdef',
+      email: 'joe@tokenjoe.com'
+    };
+
+    it('signs up a new user', async () => {
+      const newUser = await req.post('/api/auth/signup').send(testUser)
+      // console.log('newUser', newUser.body);
+    })
+  });
+
+  describe('e2e category tests', () => {
     const testCategory = {
       timestamp: Date.now,
       name: 'home',
