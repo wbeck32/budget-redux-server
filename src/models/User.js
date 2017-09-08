@@ -28,7 +28,7 @@ userSchema.method('generateHash', function (password) {
 });
 
 userSchema.method('comparePassword', function (password) {
-    return bcrypt.compareSync(password, this.hash);
+    return bcrypt.compare(password, this.password);
 });
 
 module.exports = mongoose.model('User', userSchema);

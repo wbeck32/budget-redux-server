@@ -21,6 +21,10 @@ describe('e2e budget tests', () => {
       const newUser = await req.post('/api/auth/signup').send(testUser)
       // console.log('newUser', newUser.body);
     })
+    it('user login', async () => {
+      const signedInUser = await req.post('/api/auth/signin').send(testUser)
+      // console.log('newUser', signedInUser.body);
+    })
   });
 
   describe('e2e category tests', () => {

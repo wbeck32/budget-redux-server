@@ -39,15 +39,15 @@ router
     const { email, password } = req.body;
     delete req.body.password;
 
-    const findUser = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
-    if (!findUser || !user.comparePassword(password)) {
+    if (!user || !user.comparePassword(password)) {
       throw { code: 401, error: 'Invalid Login' };
       return user;
     }
 
-    const userToken = await tokenService.sign(user);
-    return res.send({ userToken });
+    const token = await tokenService.sign(user);
+    return res.send({ token });
   });
 
 module.exports = router;
