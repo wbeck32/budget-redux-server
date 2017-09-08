@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 const jsonParser = require('body-parser').json();
 const Category = require('../models/Category');
-const ensureAuth = require('../auth/ensureAuth');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 router
   .post('/category', async (req, res, next) => {
-console.log('in post category: ', req.body)
     const category = new Category(req.body);
     const find = await Category.find({ name: category.name });
     if (find.length == 0) return res.send(await category.save(category));

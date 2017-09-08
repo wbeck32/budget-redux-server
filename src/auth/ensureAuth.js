@@ -1,25 +1,22 @@
-/* eslint no-console: off */
 const tokenService = require('./tokenService');
 
-module.exports = function ensureAuth(log = console.log) {
-  return (
-    ensureAuth,
-    async (req, res, next) => {
-      const token =
-        (await req.get('Authorization')) || req.get('authorization');
-      if (!token) return next({ code: 401, error: 'No Authorization Found' });
+// eslint-disable-next-line
+module.exports = function getEnsureAuth() {
 
-      const payload = await tokenService.verify(token);
-
-      return (
-        payload => {
-          req.user = payload;
-          next();
-        },
-        () => {
-          next({ code: 401, error: 'Authorization Failed' });
+    return function ensureAuth(req, res, next) {
+        const token = req.get('Authorization');
+        if(!token) {
+            return next({ code: 401, error: 'No Authorization Found' });
         }
-      );
-    }
-  );
+
+        tokenService.verify(token)
+            .then(payload => {
+                req.user = payload;
+                next();
+            })
+            .catch(() => {
+                next({ code: 401, error: 'Authorization Failed' });
+            });
+    };
+
 };

@@ -33,7 +33,7 @@ router
     user.password = await user.generateHash(password);
     const savedUser = await user.save();
     const userToken = await tokenService.sign(savedUser);
-    return res.send({ userToken });
+    return res.send( userToken );
   })
   .post('/signin', bodyParser, hasEmailAndPassword, async (req, res, next) => {
     const { email, password } = req.body;
