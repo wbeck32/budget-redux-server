@@ -17,6 +17,6 @@ const expenses = require('./routes/expenses');
 
 app.use('/api/auth', auth);
 app.use('/api/me', ensureAuth, me);
-app.use('/api', expenses);
+app.use('/api', ensureAuth, expenses);
 
 module.exports = app;

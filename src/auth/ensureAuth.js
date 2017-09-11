@@ -4,6 +4,7 @@ const tokenService = require('./tokenService');
 module.exports = function getEnsureAuth() {
 
     return function ensureAuth(req, res, next) {
+        console.log('ensureAuth: ', req);
         const token = req.get('Authorization');
         if(!token) {
             return next({ code: 401, error: 'No Authorization Found' });

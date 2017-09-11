@@ -6,6 +6,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 router
   .post('/category', async (req, res, next) => {
+    console.log('api new cat: ',req)
     const category = new Category(req.body);
     const find = await Category.find({ name: category.name });
     if (find.length == 0) return res.send(await category.save(category));
