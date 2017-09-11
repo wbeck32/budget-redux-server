@@ -25,9 +25,8 @@ router
     delete req.body.password;
 
     const userExists = await User.exists({ email });
-    if (userExists) {
-      // throw { code: 400, error: 'email in use' };
-      return res.send({ code: 400, error: 'email in use' })
+    if (userExists === true) {
+          return res.sendStatus(400);
     }
 
     const user = new User({ name, email });
