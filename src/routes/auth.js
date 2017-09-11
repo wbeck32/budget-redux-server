@@ -26,7 +26,7 @@ router
 
     const userExists = await User.exists({ email });
     if (userExists === true) {
-          return res.sendStatus(400);
+    return res.sendStatus(400);
     }
 
     const user = new User({ name, email });
@@ -42,8 +42,7 @@ router
     let user = await User.findOne({ email });
 
     if (!user || !user.comparePassword(password)) {
-      throw { code: 401, error: 'Invalid Login' };
-      return user;
+      return res.sendStatus(401);
     }
 
     const token = await tokenService.sign(user);
