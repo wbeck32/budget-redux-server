@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
+const Category = require('./Category');
 
 const RequiredString = {
     type: String,
@@ -12,7 +13,7 @@ const userSchema = new Schema({
     email: RequiredString,
     password: RequiredString,
     categories: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
     }]
 });

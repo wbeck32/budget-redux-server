@@ -9,6 +9,6 @@ module.exports = {
     getToken(user = { email: 'token@token.com', password: 'token', name:'token user' }) {
         return request.post('/api/auth/signup')
             .send(user)
-            .then(res => res.text);
+            .then(res => res.body.token);
     }
 };

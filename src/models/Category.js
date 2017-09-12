@@ -9,9 +9,10 @@ const subCategorySchema = new Schema({
 
 const categorySchema = new Schema({
   timestamp: { type: Date, required: true, default: Date.now },
-  name: { type: String, required: true },
+  name: { type: String, required: true, ref: 'User' },
   catAmount: { type: Number, required: true },
   catRemaining: { type: Number, required: true },
+  user: {type:mongoose.Schema.Types.ObjectId, required: true},
   subCategories: [subCategorySchema]
 });
 
