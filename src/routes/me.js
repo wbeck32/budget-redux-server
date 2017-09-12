@@ -11,9 +11,7 @@ router
   .post('/category', async (req, res, next) => {
     const user = req.user.id;
     const category = new Category(req.body);
-
     const find = await User.findOne({ _id: user });
-
     if (find.categories.length > 0) {
       const catNameForUser = await Category.find({
         _id: find.categories[0]._id
@@ -43,7 +41,6 @@ router
   .patch('/category/:cid', jsonParser, async (req, res, next) => {
     const newSubcategory = req.body;
     const { cid } = req.params;
-    console.log(cid, newSubcategory);
     const findSubcat = await Category.findOne({
       _id: cid,
       subCategories: {
@@ -51,14 +48,12 @@ router
         subCatAmount: newSubcategory.subCatAmount
       }
     }).count();
-    console.log('fs: ', findSubcat);
     if (findSubcat === 0) {
       const saveSubcat = await Category.findOneAndUpdate(
         { _id: cid },
         { $push: { subCategories: newSubcategory } },
         { new: true, runValidators: true }
       );
-
       return res.send(saveSubcat);
     }
     return res.send(null);
@@ -70,14 +65,12 @@ router
       const { body } = req;
       const { cid, sid } = req.params;
       const update = {};
-      console.log(body, cid, sid)
       if (body.subName) {
         update['subCategories.$.subName'] = body.subName;
       }
-      if (body.subAmount) {
-        update['subCategories.$.subCatAmount'] = body.subAmount;
+      if (body.subCatAmount) {
+        update['subCategories.$.subCatAmount'] = body.subCatAmount;
       }
-      console.log('update: ', update)
       const updatedSubcat = await Category.update(
         { 'subCategories._id': ObjectId(sid) },
         { $set: update }

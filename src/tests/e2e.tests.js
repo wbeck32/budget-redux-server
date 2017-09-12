@@ -3,9 +3,8 @@ const assert = chai.assert;
 const connect = require('../connect');
 const connection = require('mongoose').connection;
 const req = require('../helpers/request');
-const db = require('../helpers/db')
+const db = require('../helpers/db');
 let token = '';
-
 
 describe('e2e budget tests', () => {
   before(async () => {
@@ -15,7 +14,6 @@ describe('e2e budget tests', () => {
   });
 
   describe('e2e user tests', () => {
-
     const testUser = {
       name: 'token joe',
       password: 'abcdef',
@@ -23,13 +21,13 @@ describe('e2e budget tests', () => {
     };
 
     it('signs up a new user', async () => {
-      const newUser = await req.post('/api/auth/signup').send(testUser)
+      const newUser = await req.post('/api/auth/signup').send(testUser);
       assert.equal(newUser.statusCode, 200);
-    })
+    });
     it('user login', async () => {
-      const signedInUser = await req.post('/api/auth/signin').send(testUser)
+      const signedInUser = await req.post('/api/auth/signin').send(testUser);
       assert.equal(signedInUser.statusCode, 200);
-    })
+    });
   });
 
   describe('e2e category tests', async () => {
@@ -62,12 +60,11 @@ describe('e2e budget tests', () => {
       subCatAmount: 750
     };
 
-
     it('POST a new category to a user if it does not already exist', async () => {
-
-      const postNewCat = await req.post('/api/me/category')
-      .set('Authorization', token)
-      .send(testCategory);
+      const postNewCat = await req
+        .post('/api/me/category')
+        .set('Authorization', token)
+        .send(testCategory);
 
       assert.equal(postNewCat.statusCode, 200);
       assert.equal(postNewCat.body.name, 'home');
@@ -80,53 +77,66 @@ describe('e2e budget tests', () => {
       assert.deepEqual(postNewCatAgain.body, {});
     }),
       it('GET all categories', async () => {
-        const allCategories = await req.get('/api/me/category').set('Authorization', token);
+        const allCategories = await req
+          .get('/api/me/category')
+          .set('Authorization', token);
         assert.lengthOf(allCategories.body.categories, 1);
       }),
       it('GET category by id', async () => {
-        const allCategories = await req.get('/api/me/category').set('Authorization', token);
+        const allCategories = await req
+          .get('/api/me/category')
+          .set('Authorization', token);
         const cid = allCategories.body.categories[0];
-        const getById = await req.get(`/api/me/category/${cid}`).set('Authorization', token);
+        const getById = await req
+          .get(`/api/me/category/${cid}`)
+          .set('Authorization', token);
         assert.equal(getById.body._id, cid);
       }),
       it('POST a new subcategory to an existing category', async () => {
-        const allCategories = await req.get('/api/me/category').set('Authorization', token);
+        const allCategories = await req
+          .get('/api/me/category')
+          .set('Authorization', token);
         const cid = allCategories.body.categories[0];
         const updatedCategory = await req
           .patch(`/api/me/category/${cid}`)
-          .send(testSubcategory).set('Authorization', token);
+          .send(testSubcategory)
+          .set('Authorization', token);
 
         assert.lengthOf(updatedCategory.body.subCategories, 3);
         assert.equal(updatedCategory.body.name, 'home');
       }),
-      it.skip('UPDATE existing subcategory with a new budget amount', async () => {
-        const allCategories = await req.get('/api/me/category').set('Authorization', token);
+      it('UPDATE existing subcategory with a new budget amount', async () => {
+        const allCategories = await req
+          .get('/api/me/category')
+          .set('Authorization', token);
         const cid = allCategories.body.categories[0];
 
         const getCategory = await req
-        .get(`/api/me/category/${cid}`)
-        .set('Authorization', token);
-        const {subCategories} = getCategory.body;
+          .get(`/api/me/category/${cid}`)
+          .set('Authorization', token);
+        const { subCategories } = getCategory.body;
         let sid = null;
         for (let key in subCategories) {
           if (subCategories[key].subName === testSubcategory2.subName) {
-            sid = subCategories[key]._id
+            sid = subCategories[key]._id;
           }
-         }
+        }
 
-
-        console.log('sid',sid)
         const updatedSubcategory = await req
-          .patch(`/api/me/category/${cid}/subcategory/${sid}`).set('Authorization', token)
+          .patch(`/api/me/category/${cid}/subcategory/${sid}`)
+          .set('Authorization', token)
           .send(testSubcategory2);
-          console.log(updatedSubcategory.body)
-          assert.equal(updatedSubcategory.body.n, 1);
-          assert.equal(updatedSubcategory.body.nModified, 1);
+        assert.equal(updatedSubcategory.body.n, 1);
+        assert.equal(updatedSubcategory.body.nModified, 1);
       }),
-      it.skip('DELETE existing category and its expenses', async () => {
-        const allCategories = await req.get('/api/me/category').set('Authorization', token);
-        const cid = allCategories.body[0]._id;
-        const deleteSubcategory = await req.del(`/api/me/category/${cid}`).set('Authorization', token)
+      it('DELETE existing category and its expenses', async () => {
+        const allCategories = await req
+          .get('/api/me/category')
+          .set('Authorization', token);
+        const cid = allCategories.body.categories[0];
+        const deleteSubcategory = await req
+          .del(`/api/me/category/${cid}`)
+          .set('Authorization', token);
         assert.equal(deleteSubcategory.body.n, 1);
         assert.equal(deleteSubcategory.body.ok, 1);
       });
