@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const jsonParser = require('body-parser').json();
 const mongoose = require('mongoose');
-
 const Category = require('../models/Category');
 const User = require('../models/User');
 const ObjectId = require('mongoose').Types.ObjectId;
@@ -21,7 +20,7 @@ router
       const savedCat = await category.save();
       const savedToUser = await User.findOneAndUpdate(
         { _id: find._id },
-        { $addToSet: { categories: savedCat._id } },
+        { $push: { categories: savedCat._id } },
         { new: true, runValidators: true }
       );
       return res.send(savedCat);
