@@ -27,10 +27,14 @@ router
     }
     return res.send(null);
   })
-  .get('/category', async (req, res, next) => {
+  .get('/category', (req, res, next) => {
     const userId = req.user.id;
-    const allCats = await User.findOne({ _id: userId });
-    return res.send(allCats);
+    return User.findOne({ _id: userId })
+    .then(allCats => {
+      console.log(33, allCats)
+      return res.send(allCats);
+    })
+
   })
   .get('/category/:cid', async (req, res, next) => {
     const { cid } = req.params;
