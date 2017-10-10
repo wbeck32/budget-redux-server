@@ -31,7 +31,6 @@ router
     const userId = req.user.id;
     User.findOne({ _id: userId })
     .then(allCats => {
-      console.log(33, allCats)
       return res.send(allCats);
     })
 

@@ -39,14 +39,25 @@ router
     const { email, password } = req.body;
     delete req.body.password;
 
-    let user = await User.findOne({ email });
+    User.findOne({ email })
+    .select()
+    .then(user => {
 
-    if (!user || !user.comparePassword(password)) {
-      return res.sendStatus(401);
-    }
-
-    const token = await tokenService.sign(user);
-    return res.send({ token });
+      if (!user || !user.comparePassword(password)) {
+        throw next({
+          code: 401,
+          name: 'User not found'
+        });
+      }
+      return user;
+    })
+    .then(withPassword => {
+      return tokenService.sign(withPassword);
+    })
+    .then(token => {
+      return res.send(token);
+    })
+    .catch(next);
   });
 
 module.exports = router;
