@@ -38,11 +38,11 @@ router
   .post('/signin', bodyParser, hasEmailAndPassword, async (req, res, next) => {
     const { email, password } = req.body;
     delete req.body.password;
+    console.log(555, email, password)
 
     User.findOne({ email })
     .select()
     .then(user => {
-
       if (!user || !user.comparePassword(password)) {
         throw next({
           code: 401,
