@@ -29,9 +29,8 @@ router
   })
   .get('/category', (req, res, next) => {
     const userId = req.user.id;
-    User.findOne({ _id: userId })
+    Category.find({ _id: userId })
     .then(allCats => {
-      console.log(234, allCats)
       return res.send(allCats);
     })
 
