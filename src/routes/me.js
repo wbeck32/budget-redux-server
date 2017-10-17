@@ -24,10 +24,7 @@ router
   })
   .get('/category', (req, res, next) => {
     const userId = req.user.id;
-    console.log(9898, userId);
-    return Category.find({ _id: userId }).then(allCats => {
-      console.log(989898, allCats);
-
+    return Category.find({ user: userId }).then(allCats => {
       return res.send(allCats);
     });
   })
