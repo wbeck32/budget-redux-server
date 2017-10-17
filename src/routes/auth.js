@@ -20,21 +20,48 @@ router
   .get('/verify', ensureAuth, async (req, res) => {
     return res.send({ valid: true });
   })
-  .post('/signup', bodyParser, hasEmailAndPassword, async (req, res, next) => {
-    const { name, email, password } = req.body;
-    delete req.body.password;
+  .post('/signup', hasEmailAndPassword, async (req, res, next) => {
+    const { email, password } = req.body;
+    User.exists({ email })
+    .then(exists => {
+      if (exists) {
+        throw next({
+          code: 400,
+          name: 'email in use'
+        });
+      }
 
-    const userExists = await User.exists({ email });
-    if (userExists === true) {
-    return res.sendStatus(400);
-    }
+      let user = new User(req.body);
 
-    const user = new User({ name, email });
-    user.password = await user.generateHash(password);
-    const savedUser = await user.save();
-    const token = await tokenService.sign(savedUser);
-    return res.send( {token} );
+      const hash = user.generateHash(password);
+      return user.save();
+    })
+    .then(withPassword => {
+      return tokenService.sign(withPassword);
+    })
+    .then(token => {
+      return res.send(token);
+    })
+    .catch(next);
   })
+  // .post('/signup', bodyParser, hasEmailAndPassword, (req, res, next) => {
+  //   const { name, email, password } = req.body;
+  //   delete req.body.password;
+
+  //   return User.exists({ email })
+  //   .then(exists =>{
+  //     if (userExists === true) {
+  //       return res.sendStatus(400);
+  //       }
+  //   })
+
+
+  //   const user = new User({ name, email });
+  //   user.password = await user.generateHash(password);
+  //   return user.save();
+  //   const token = await tokenService.sign(savedUser);
+  //   return res.send( {token} );
+  // })
   .post('/signin', bodyParser, hasEmailAndPassword, async (req, res, next) => {
     const { email, password } = req.body;
     delete req.body.password;
