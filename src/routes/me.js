@@ -8,45 +8,28 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 router
   .post('/category', (req, res, next) => {
-    const user = req.user.id;
+    const iD = req.user.id;
+
     const category = new Category(req.body);
-    User.findOne({ _id: user })
-    .then(user => {
-      console.log(5656, user)
-      if (user.categories.length > 0) {
-        console.log(89898, user.categories)
-        return Category.find({
-          _id: user.categories[0]._id
-        });
-      } else {
-        category.user = user;
-        console.log(35353, category)
-        return category.save()
-        .then(savedCat => {
-          console.log(222, savedCat)
-          return User.findOneAndUpdate(
-            { _id: user },
-            { $push: { categories: savedCat._id } },
-            { new: true, runValidators: true }
-          );
-          return res.send(savedCat);
-        })
-
-      }
-    })
-
-    // return res.send(null);
+    category.user = iD;
+    return category.save().then(savedCat => {
+      return User.findOneAndUpdate(
+        { _id: iD },
+        { $push: { categories: savedCat._id } },
+        { new: true, runValidators: true }
+      ).then(newCat => {
+        return res.send(newCat);
+      });
+    });
   })
   .get('/category', (req, res, next) => {
     const userId = req.user.id;
-    console.log(9898, userId)
-    return Category.find({ _id: userId })
-    .then(allCats => {
-      console.log(989898, allCats)
+    console.log(9898, userId);
+    return Category.find({ _id: userId }).then(allCats => {
+      console.log(989898, allCats);
 
       return res.send(allCats);
-    })
-
+    });
   })
   .get('/category/:cid', async (req, res, next) => {
     const { cid } = req.params;
