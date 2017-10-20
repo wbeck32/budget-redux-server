@@ -18,6 +18,7 @@ router
         { $push: { categories: savedCat._id } },
         { new: true, runValidators: true }
       ).then(newCat => {
+        console.log(1111, newCat, typeof newCat)
         return res.send(newCat);
       });
     });
@@ -25,6 +26,7 @@ router
   .get('/category', (req, res, next) => {
     const userId = req.user.id;
     return Category.find({ user: userId }).then(allCats => {
+      console.log(2222, allCats, typeof allCats)
       return res.send(allCats);
     });
   })
