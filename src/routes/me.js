@@ -9,7 +9,6 @@ const ObjectId = require('mongoose').Types.ObjectId;
 router
   .post('/category', (req, res, next) => {
     const iD = req.user.id;
-
     const category = new Category(req.body);
     category.user = iD;
     return category.save().then(savedCat => {
@@ -17,16 +16,22 @@ router
         { _id: iD },
         { $push: { categories: savedCat._id } },
         { new: true, runValidators: true }
-      ).then(newCat => {
-        console.log(1111, newCat, typeof newCat)
-        return res.send(newCat);
+      ).then(updatedUser => {
+        return Category.find([
+          { $match: { user: iD } },
+          { $project: { name: 1, catAmount: 1, catRemaining: 1 } }
+        ]).then(userCats => {
+          return res.send(userCats);
+        });
       });
     });
   })
   .get('/category', (req, res, next) => {
     const userId = req.user.id;
-    return Category.find({ user: userId }).then(allCats => {
-      console.log(2222, allCats, typeof allCats)
+    return Category.find([
+      { $match: { user: userId } },
+      { $project: { name: 1, catAmount: 1, catRemaining: 1 } }
+    ]).then(allCats => {
       return res.send(allCats);
     });
   })
