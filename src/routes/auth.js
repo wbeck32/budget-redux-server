@@ -4,6 +4,7 @@ const User = require('../models/User');
 const ensureAuth = require('../auth/ensureAuth')();
 const tokenService = require('../auth/tokenService');
 const bodyParser = require('body-parser').json();
+const asyncIt = require('../helpers/async')
 
 function hasEmailAndPassword(req, res, next) {
   const user = req.body;
@@ -16,74 +17,47 @@ function hasEmailAndPassword(req, res, next) {
   next();
 }
 
+
+
 router
-  .get('/verify', ensureAuth, async (req, res) => {
+  .get('/verify', ensureAuth, (req, res) => {
     return res.send({ valid: true });
   })
-  .post('/signup', hasEmailAndPassword, async (req, res, next) => {
+  .post('/signup', hasEmailAndPassword, asyncIt, async (req, res, next) => {
     const { email, password } = req.body;
-    User.exists({ email })
-    .then(exists => {
-      if (exists) {
-        throw next({
-          code: 400,
-          name: 'email in use'
-        });
-      }
+    const exists = User.exists({ email });
 
-      let user = new User(req.body);
+    if (exists) {
+      throw next({
+        code: 400,
+        name: 'email in use'
+      });
+    }
 
-      const hash = user.generateHash(password);
-      return user.save();
-    })
-    .then(withPassword => {
-      return tokenService.sign(withPassword);
-    })
-    .then(token => {
-      return res.send(token);
-    })
-    .catch(next);
+    let user = new User(req.body);
+    const hash = user.generateHash(password);
+    const withPassword = await user.save();
+    const token = tokenService.sign(withPassword);
+    return token;
   })
-  // .post('/signup', bodyParser, hasEmailAndPassword, (req, res, next) => {
-  //   const { name, email, password } = req.body;
-  //   delete req.body.password;
+  .post(
+    '/signin',
+    bodyParser,
+    hasEmailAndPassword,
+    asyncIt(async (req, res, next) => {
+      const { email, password } = req.body;
+      delete req.body.password;
 
-  //   return User.exists({ email })
-  //   .then(exists =>{
-  //     if (userExists === true) {
-  //       return res.sendStatus(400);
-  //       }
-  //   })
-
-
-  //   const user = new User({ name, email });
-  //   user.password = await user.generateHash(password);
-  //   return user.save();
-  //   const token = await tokenService.sign(savedUser);
-  //   return res.send( {token} );
-  // })
-  .post('/signin', bodyParser, hasEmailAndPassword, async (req, res, next) => {
-    const { email, password } = req.body;
-    delete req.body.password;
-
-    User.findOne({ email })
-    .select()
-    .then(user => {
+      const user = await User.findOne({ email }).select();
       if (!user || !user.comparePassword(password)) {
         throw next({
           code: 401,
           name: 'User not found'
         });
       }
-      return user;
+      const withPassword = await tokenService.sign(user);
+      return withPassword;
     })
-    .then(withPassword => {
-      return tokenService.sign(withPassword);
-    })
-    .then(token => {
-      return res.send(token);
-    })
-    .catch(next);
-  });
+  );
 
 module.exports = router;
