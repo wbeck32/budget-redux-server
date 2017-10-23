@@ -4,20 +4,7 @@ const User = require('../models/User');
 const ensureAuth = require('../auth/ensureAuth')();
 const tokenService = require('../auth/tokenService');
 const bodyParser = require('body-parser').json();
-const asyncIt = require('../helpers/async')
-
-function hasEmailAndPassword(req, res, next) {
-  const user = req.body;
-  if (!user || !user.email || !user.password) {
-    return next({
-      code: 400,
-      error: 'name, email, and password must be supplied'
-    });
-  }
-  next();
-}
-
-
+const { hasEmailAndPassword, asyncIt } = require('../helpers/middleware');
 
 router
   .get('/verify', ensureAuth, (req, res) => {

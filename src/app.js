@@ -3,7 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const getEnsureAuth = require('./auth/ensureAuth')
-// const errorHandler = require('./error-handler');
+const errorHandler = require('./helpers/error-handler');
 const app = express();
 
 app.use(morgan('dev'));
@@ -18,5 +18,7 @@ const expenses = require('./routes/expenses');
 app.use('/api/auth', auth);
 app.use('/api/me', ensureAuth, me);
 app.use('/api', ensureAuth, expenses);
+
+app.use(errorHandler());
 
 module.exports = app;
