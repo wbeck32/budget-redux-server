@@ -6,6 +6,12 @@ const Category = require('../models/Category');
 const User = require('../models/User');
 const ObjectId = require('mongoose').Types.ObjectId;
 
+function asyncIt(fn) {
+  return function(req, res, next) {
+    fn(req).then(() => next(), next);
+  };
+}
+
 router
   .post('/category', (req, res, next) => {
     const iD = req.user.id;
