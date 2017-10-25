@@ -10,23 +10,22 @@ router
   .get('/verify', ensureAuth, (req, res) => {
     return res.send({ valid: true });
   })
-  .post('/signup', hasEmailAndPassword, asyncIt, async (req, res, next) => {
+  .post('/signup', hasEmailAndPassword, asyncIt(async (req, res, next) => {
     const { email, password } = req.body;
-    const exists = User.exists({ email });
-
+    const exists = await User.exists({ email });
+    console.log(8, exists)
     if (exists) {
-      throw next({
-        code: 400,
-        name: 'email in use'
-      });
+      throw {code: 400, name: 'Email in use'};
     }
 
     let user = new User(req.body);
-    const hash = user.generateHash(password);
+
+    const hash = await user.generateHash(password);
     const withPassword = await user.save();
-    const token = tokenService.sign(withPassword);
+    const token = await tokenService.sign(withPassword);
+    console.log(55, token)
     return token;
-  })
+  }))
   .post(
     '/signin',
     bodyParser,
@@ -37,10 +36,7 @@ router
 
       const user = await User.findOne({ email }).select();
       if (!user || !user.comparePassword(password)) {
-        throw next({
-          code: 401,
-          name: 'User not found'
-        });
+        throw { code: 401, name: 'User not found'};
       }
       const withPassword = await tokenService.sign(user);
       return withPassword;

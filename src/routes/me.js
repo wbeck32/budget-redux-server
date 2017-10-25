@@ -11,7 +11,7 @@ router
   .post(
     '/category',
     asyncIt(async (req, res, next) => {
-      const iD = req.user.id;
+      const iD = req.user.user._id;
       const category = new Category(req.body);
       category.user = iD;
       const savedCat = await category.save();

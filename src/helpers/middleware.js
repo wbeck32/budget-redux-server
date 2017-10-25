@@ -2,7 +2,9 @@ module.exports = {
   asyncIt(fn) {
     return function(req, res, next) {
       fn(req)
-        .then(returnedVal => res.send(returnedVal))
+        .then(returnedVal => {
+          res.send(returnedVal);
+        })
         .catch(next);
     };
   },
@@ -10,10 +12,11 @@ module.exports = {
   hasEmailAndPassword(req, res, next) {
     const user = req.body;
     if (!user || !user.email || !user.password) {
-      return next({
+      const err = {
         code: 400,
-        error: 'name, email, and password must be supplied'
-      });
+        name: 'Name, email, and password must be supplied'
+      };
+      return err;
     }
     next();
   }

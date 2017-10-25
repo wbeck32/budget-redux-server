@@ -11,6 +11,6 @@ module.exports = {
   async verify(token) {
     const verifiedUser = await jwt.verifyAsync(token, appSecret);
     if (verifiedUser) return verifiedUser;
-    return { code: 401, error: 'Authorization Failed' };
+    throw { code: 401, name: 'Verification failed' };
   }
 };
