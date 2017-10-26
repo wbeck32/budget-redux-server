@@ -30,7 +30,8 @@ router
   .get(
     '/category',
     asyncIt(async (req, res, next) => {
-      const userId = req.user.id;
+      console.log(222222, req)
+      const userId = req.user.user._id;
       const allCats = await Category.find([
         { $match: { user: userId } },
         { $project: { name: 1, catAmount: 1, catRemaining: 1 } }

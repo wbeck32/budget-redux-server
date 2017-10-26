@@ -16,7 +16,7 @@ module.exports = {
         code: 400,
         name: 'Name, email, and password must be supplied'
       };
-      return err;
+      throw err;
     }
     next();
   }

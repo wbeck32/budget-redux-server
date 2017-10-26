@@ -21,19 +21,25 @@ router
     let user = new User(req.body);
 
     const hash = await user.generateHash(password);
+    console.log(44, hash)
+    user.password = hash;
     const withPassword = await user.save();
-    const token = await tokenService.sign(withPassword);
-    console.log(55, token)
-    return token;
+    console.log(50, withPassword)
+
+    const tokenizedUser = await tokenService.sign(withPassword);
+    tokenizedUser.user.password = null;
+    console.log(55, tokenizedUser)
+
+    return tokenizedUser;
   }))
   .post(
     '/signin',
-    bodyParser,
-    hasEmailAndPassword,
     asyncIt(async (req, res, next) => {
-      const { email, password } = req.body;
-      delete req.body.password;
+      console.log(787878, req)
 
+      const { email, password, token } = req.body;
+      delete req.body.password;
+      console.log(787878, req.body)
       const user = await User.findOne({ email }).select();
       if (!user || !user.comparePassword(password)) {
         throw { code: 401, name: 'User not found'};
