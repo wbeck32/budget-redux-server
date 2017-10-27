@@ -10,7 +10,7 @@ module.exports = {
   },
   async verify(token) {
     const verifiedUser = await jwt.verifyAsync(token, appSecret);
-    console.log(90090, verifiedUser)
+    // console.log(90090, verifiedUser)
     if (verifiedUser) return verifiedUser;
     throw { code: 401, name: 'Verification failed' };
   }

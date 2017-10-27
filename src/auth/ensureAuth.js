@@ -10,7 +10,7 @@ module.exports = function getEnsureAuth() {
 
         tokenService.verify(token)
             .then(payload => {
-                console.log(89898989, payload)
+                // console.log(89898989, payload)
                 req.user = payload;
                 next();
             })
