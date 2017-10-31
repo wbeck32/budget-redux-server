@@ -15,18 +15,15 @@ router
       const category = new Category(req.body);
       category.user = iD;
       const savedCat = await category.save();
-      console.log(111111, savedCat)
       const updatedUser = await User.findOneAndUpdate(
         { _id: iD },
         { $push: { categories: savedCat._id } },
         { new: true, runValidators: true }
       );
-      console.log(555, updatedUser)
       const userCats = await Category.aggregate([
         { $match: { user: updatedUser._id } },
         { $project: { name: 1, catAmount: 1, catRemaining: 1 } }
       ]);
-      console.log(1000, userCats)
       return userCats;
     })
   )
@@ -34,12 +31,10 @@ router
     '/category',
     asyncIt(async (req, res, next) => {
       const userId = req.user.user._id;
-      console.log(222, userId, req.user)
       const allCats = await Category.find([
         { $match: { user: userId } },
         { $project: { name: 1, catAmount: 1, catRemaining: 1, user: 1 } }
       ]);
-      console.log(888, allCats)
       return allCats;
     })
   )
