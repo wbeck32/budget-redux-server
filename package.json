@@ -31,7 +31,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
-    "express": "^4.15.4",
+    "express": "^4.17.3",
     "jsonwebtoken-promisified": "^1.0.3",
     "mongodb": "^2.2.31",
     "mongoose": "^4.11.10"
